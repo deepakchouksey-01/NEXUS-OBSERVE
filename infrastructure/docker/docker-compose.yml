@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: nexus
+      POSTGRES_PASSWORD: nexus
+      POSTGRES_DB: nexus_observe
+    ports:
+      - "5432:5432"
+    volumes:
+      - nexus_postgres:/var/lib/postgresql
+
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - nexus_redis:/data
+
+volumes:
+  nexus_postgres:
+  nexus_redis:

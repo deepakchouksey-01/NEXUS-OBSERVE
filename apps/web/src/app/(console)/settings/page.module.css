@@ -1,0 +1,680 @@
+.page {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 7px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.header p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton {
+  height: 38px;
+  padding: 0 15px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.primaryButton {
+  background: var(--blue);
+  color: #071019;
+}
+
+.primaryButton:hover {
+  filter: brightness(1.08);
+}
+
+.secondaryButton {
+  background: var(--panel);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.secondaryButton:hover {
+  background: var(--panel-2);
+}
+
+.dangerButton {
+  background: transparent;
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--red);
+}
+
+.dangerButton:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.saveBanner {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  background: rgba(34, 197, 94, 0.07);
+  border-radius: 8px;
+  color: var(--green);
+  font-size: 13px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.settingsNav {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 10px;
+  position: sticky;
+  top: 20px;
+}
+
+.navTitle {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 9px 10px 11px;
+}
+
+.navItem {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 7px;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.navItem:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.navItemActive {
+  background: rgba(56, 189, 248, 0.08);
+  color: var(--text);
+}
+
+.navIcon {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.navItemActive .navIcon {
+  border-color: rgba(56, 189, 248, 0.35);
+  color: var(--blue);
+}
+
+.navContent {
+  min-width: 0;
+  flex: 1;
+}
+
+.navContent strong {
+  display: block;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.navContent small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.navArrow {
+  opacity: 0.45;
+  flex: 0 0 auto;
+}
+
+.content {
+  min-width: 0;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 22px;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  font-size: 17px;
+  color: var(--text);
+}
+
+.panelHeader p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.field label {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 40px;
+  padding: 0 11px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: #0d151e;
+  color: var(--text);
+  outline: none;
+  font-size: 13px;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: rgba(56, 189, 248, 0.55);
+}
+
+.field span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.readOnly {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 11px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: rgba(127, 144, 164, 0.05);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.environmentCard,
+.retentionSummary,
+.securityBanner,
+.accessNotice {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.environmentIcon,
+.securityIcon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.08);
+  color: var(--blue);
+  flex: 0 0 auto;
+}
+
+.environmentCard > div:nth-child(2),
+.retentionSummary > div,
+.securityBanner > div:nth-child(2),
+.accessNotice > div {
+  flex: 1;
+}
+
+.environmentCard strong,
+.retentionSummary strong,
+.securityBanner strong,
+.accessNotice strong {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.environmentCard p,
+.retentionSummary p,
+.securityBanner p,
+.accessNotice p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.statusActive {
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: rgba(34, 197, 94, 0.09);
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.retentionSummary {
+  align-items: flex-start;
+}
+
+.retentionSummary > svg {
+  color: var(--blue);
+  margin-top: 2px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.infoGrid > div,
+.telemetryStats > div {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.infoGrid span,
+.telemetryStats span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+
+.infoGrid strong,
+.telemetryStats strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.settingList {
+  border-top: 1px solid var(--border);
+}
+
+.settingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settingRow strong {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.settingRow p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.toggle {
+  width: 42px;
+  height: 23px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px;
+  background: #0c141d;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background 0.15s ease;
+}
+
+.toggle span {
+  display: block;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform 0.15s ease;
+}
+
+.toggleActive {
+  background: rgba(34, 197, 94, 0.22);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.toggleActive span {
+  background: var(--green);
+  transform: translateX(18px);
+}
+
+.securityBanner {
+  border-color: rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.securityBanner .securityIcon {
+  color: var(--green);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.roleGrid > div {
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.roleGrid strong {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.roleGrid span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.accessNotice {
+  margin-bottom: 0;
+}
+
+.accessNotice > svg:first-child {
+  color: var(--blue);
+}
+
+.telemetryEndpoint {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0d151e;
+  margin-bottom: 20px;
+}
+
+.telemetryEndpoint span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.telemetryEndpoint code {
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.telemetryStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.dangerPanel {
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.dangerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.dangerRow strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.dangerRow p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  max-width: 560px;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 8, 13, 0.72);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal {
+  width: min(440px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.modal h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.modal p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: var(--text);
+  background: var(--panel-2);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.dangerModalIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--red);
+  margin-bottom: 15px;
+}
+
+.modalWarning {
+  margin-top: 8px;
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .roleGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .headerActions button {
+    flex: 1;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .settingsNav {
+    position: static;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .infoGrid,
+  .telemetryStats {
+    grid-template-columns: 1fr;
+  }
+
+  .navItem {
+    padding: 9px;
+  }
+}
+
+@media (max-width: 560px) {
+  .panel {
+    padding: 16px;
+  }
+
+  .roleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .environmentCard,
+  .retentionSummary,
+  .securityBanner,
+  .accessNotice,
+  .dangerRow,
+  .telemetryEndpoint {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dangerRow .dangerButton {
+    width: 100%;
+  }
+
+  .telemetryEndpoint code {
+    width: 100%;
+  }
+}

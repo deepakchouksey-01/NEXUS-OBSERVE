@@ -1,0 +1,566 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  ENGINEER
+  VIEWER
+  INCIDENT_RESPONDER
+}
+
+enum EnvironmentKind {
+  PRODUCTION
+  STAGING
+  DEVELOPMENT
+}
+
+enum IncidentSeverity {
+  SEV1
+  SEV2
+  SEV3
+  SEV4
+}
+
+enum IncidentStatus {
+  OPEN
+  INVESTIGATING
+  MITIGATING
+  RESOLVED
+  CLOSED
+}
+
+enum ServiceStatus {
+  HEALTHY
+  DEGRADED
+  CRITICAL
+  UNKNOWN
+}
+
+enum HostStatus {
+  HEALTHY
+  DEGRADED
+  CRITICAL
+  OFFLINE
+  UNKNOWN
+}
+
+enum ContainerStatus {
+  RUNNING
+  STOPPED
+  RESTARTING
+  FAILED
+  UNKNOWN
+}
+
+enum AlertStatus {
+  FIRING
+  RESOLVED
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users         OrganizationUser[]
+  projects      Project[]
+  hosts         Host[]
+  containers    Container[]
+  alerts        Alert[]
+  monitors      Monitor[]
+  integrations  Integration[]
+  apiKeys       ApiKey[]
+  auditLogs     AuditLog[]
+  notifications Notification[]
+
+  @@index([createdAt])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  passwordHash String?
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizations OrganizationUser[]
+  auditLogs     AuditLog[]
+
+  @@index([email])
+}
+
+model OrganizationUser {
+  id             String @id @default(cuid())
+  organizationId String
+  userId         String
+  role           Role
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([organizationId, role])
+  @@index([userId])
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  slug           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  environments Environment[]
+  services     Service[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+}
+
+model Environment {
+  id        String          @id @default(cuid())
+  projectId String
+  name      String
+  kind      EnvironmentKind
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  services   Service[]
+  hosts      Host[]
+  containers Container[]
+
+  @@unique([projectId, name])
+  @@index([projectId, kind])
+}
+
+model Service {
+  id            String        @id @default(cuid())
+  projectId     String
+  environmentId String
+  name          String
+  slug          String
+  status        ServiceStatus @default(UNKNOWN)
+  version       String?
+  description   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  logs        Log[]
+  traces      Trace[]
+  spans       Span[]
+  metrics     Metric[]
+  deployments Deployment[]
+  incidents   Incident[]
+  slos        SLO[]
+  hosts       ServiceHost[]
+  containers  Container[]
+  monitors    MonitorService[]
+  alerts      AlertService[]
+  directAlerts Alert[]
+
+  @@unique([environmentId, slug])
+  @@index([projectId, status])
+  @@index([environmentId, status])
+  @@index([projectId, environmentId])
+}
+
+model Host {
+  id             String     @id @default(cuid())
+  organizationId String
+  environmentId  String?
+  name           String
+  hostname       String?
+  ipAddress      String?
+  region         String?
+  status         HostStatus @default(UNKNOWN)
+  cpuUsage       Float?
+  memoryUsage    Float?
+  diskUsage      Float?
+  networkMbps    Float?
+  lastSeenAt     DateTime?
+  metadata       Json?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  environment Environment? @relation(fields: [environmentId], references: [id], onDelete: SetNull)
+
+  services   ServiceHost[]
+  containers Container[]
+
+  @@index([organizationId, status])
+  @@index([environmentId])
+  @@index([lastSeenAt])
+}
+
+model ServiceHost {
+  serviceId String
+  hostId    String
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  host Host @relation(fields: [hostId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, hostId])
+  @@index([hostId])
+}
+
+model Container {
+  id             String          @id @default(cuid())
+  organizationId String
+  environmentId  String?
+  serviceId      String?
+  hostId         String?
+  name           String
+  image          String?
+  imageTag       String?
+  containerId    String?
+  status         ContainerStatus @default(UNKNOWN)
+  cpuUsage       Float?
+  memoryUsage    Float?
+  restartCount   Int             @default(0)
+  startedAt      DateTime?
+  lastSeenAt     DateTime?
+  metadata       Json?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  environment Environment? @relation(fields: [environmentId], references: [id], onDelete: SetNull)
+
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  host Host? @relation(fields: [hostId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, status])
+  @@index([environmentId])
+  @@index([serviceId])
+  @@index([hostId])
+  @@index([lastSeenAt])
+}
+
+model Metric {
+  id        String   @id @default(cuid())
+  serviceId String
+  name      String
+  value     Float
+  timestamp DateTime
+  labels    Json
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, name, timestamp])
+  @@index([timestamp])
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  serviceId String
+  level     String
+  message   String
+  timestamp DateTime
+  traceId   String?
+  spanId    String?
+  requestId String?
+  metadata  Json?
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, timestamp])
+  @@index([serviceId, level, timestamp])
+  @@index([traceId])
+  @@index([spanId])
+  @@index([requestId])
+}
+
+model Trace {
+  id         String   @id @default(cuid())
+  serviceId  String
+  traceId    String   @unique
+  spanId     String
+  name       String
+  durationMs Int
+  status     String
+  timestamp  DateTime
+  metadata   Json?
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  spans Span[]
+
+  @@unique([serviceId, spanId])
+  @@index([serviceId, timestamp])
+  @@index([traceId, timestamp])
+}
+
+model Span {
+  id           String   @id @default(cuid())
+  traceId      String
+  spanId       String
+  parentSpanId String?
+  serviceId    String
+  name         String
+  durationMs   Int
+  status       String
+  timestamp    DateTime
+  attributes   Json?
+
+  trace Trace @relation(fields: [traceId], references: [traceId], onDelete: Cascade)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([traceId, spanId])
+  @@index([traceId])
+  @@index([serviceId, timestamp])
+  @@index([parentSpanId])
+}
+
+model Incident {
+  id         String           @id @default(cuid())
+  number     Int
+  serviceId  String
+  title      String
+  severity   IncidentSeverity
+  status     IncidentStatus
+  startedAt  DateTime
+  resolvedAt DateTime?
+  rootCause  String?
+  impact     String?
+  confidence Float?
+  evidence   Json?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  alerts Alert[]
+
+  @@unique([serviceId, number])
+  @@index([serviceId, status])
+  @@index([severity, status])
+  @@index([startedAt])
+}
+
+model Alert {
+  id             String      @id @default(cuid())
+  organizationId String
+  serviceId      String?
+  incidentId     String?
+  name           String
+  condition      Json
+  status         AlertStatus @default(FIRING)
+  enabled        Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  triggeredAt    DateTime?
+  resolvedAt     DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  incident Incident? @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+
+  services AlertService[]
+
+  @@index([organizationId, status])
+  @@index([organizationId, enabled])
+  @@index([serviceId])
+  @@index([incidentId])
+}
+
+model AlertService {
+  alertId   String
+  serviceId String
+
+  alert Alert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([alertId, serviceId])
+  @@index([serviceId])
+}
+
+model Monitor {
+  id              String   @id @default(cuid())
+  organizationId  String
+  name            String
+  query           Json
+  intervalSeconds Int
+  enabled         Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastRunAt       DateTime?
+  lastSuccessAt   DateTime?
+  lastError       String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  services MonitorService[]
+
+  @@index([organizationId, enabled])
+}
+
+model MonitorService {
+  monitorId String
+  serviceId String
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([monitorId, serviceId])
+  @@index([serviceId])
+}
+
+model SLO {
+  id            String   @id @default(cuid())
+  serviceId     String
+  name          String
+  target        Float
+  windowSeconds Int
+  current       Float
+  errorBudget   Float?
+  burnRate      Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, name])
+  @@index([serviceId])
+}
+
+model Deployment {
+  id          String   @id @default(cuid())
+  serviceId   String
+  version     String
+  deployedAt  DateTime
+  status      String
+  commitSha   String?
+  deployedBy  String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, deployedAt])
+  @@index([deployedAt])
+}
+
+model Integration {
+  id             String            @id @default(cuid())
+  organizationId String
+  name           String
+  type           String
+  status         IntegrationStatus @default(DISCONNECTED)
+  configuration  Json?
+  lastSyncAt     DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+}
+
+model ApiKey {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+  keyPrefix      String
+  keyHash        String       @unique
+  status         ApiKeyStatus @default(ACTIVE)
+  scopes         Json
+  environment    String?
+  lastUsedAt     DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+  revokedAt      DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([organizationId, createdAt])
+}
+
+model Notification {
+  id             String             @id @default(cuid())
+  organizationId String
+  type           String
+  recipient      String
+  subject        String?
+  message        String
+  status         NotificationStatus @default(PENDING)
+  metadata       Json?
+  createdAt      DateTime           @default(now())
+  sentAt         DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([status, createdAt])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String
+  action         String
+  resource       String
+  resourceId     String?
+  severity       String   @default("INFO")
+  success        Boolean  @default(true)
+  ipAddress      String?
+  userAgent      String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, action, createdAt])
+  @@index([organizationId, severity, createdAt])
+  @@index([userId, createdAt])
+}

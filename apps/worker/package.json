@@ -1,0 +1,23 @@
+{
+  "name": "@nexus/worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo lint-ready",
+    "typecheck": "tsc --noEmit",
+    "test": "echo no-tests-yet"
+  },
+  "dependencies": {
+    "@nexus/database": "file:../../packages/database",
+    "@prisma/adapter-pg": "^7.10.0",
+    "ioredis": "^5.6.1",
+    "pino": "^9.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}

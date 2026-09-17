@@ -1,0 +1,34 @@
+:root {
+  --nexus-bg: #0B0F14;
+  --nexus-surface: #111820;
+  --nexus-card: #151D26;
+  --nexus-border: #25303B;
+  --nexus-text: #E8EDF2;
+  --nexus-muted: #8B98A7;
+  --nexus-accent: #38BDF8;
+  --nexus-success: #22C55E;
+  --nexus-warning: #F59E0B;
+  --nexus-critical: #EF4444;
+  --nexus-ai: #A78BFA;
+  --nexus-radius: 10px;
+}
+.nexus-card { background:var(--nexus-card); border:1px solid var(--nexus-border); border-radius:var(--nexus-radius); color:var(--nexus-text); overflow:hidden; }
+.nexus-card__header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 18px; border-bottom:1px solid var(--nexus-border); }
+.nexus-card__body { padding:18px; }
+.nexus-card__title { margin:0; font-size:14px; font-weight:650; }
+.nexus-card__description { margin:4px 0 0; color:var(--nexus-muted); font-size:12px; }
+.nexus-button { border:1px solid transparent; border-radius:8px; min-height:36px; padding:0 13px; font:inherit; font-size:13px; font-weight:600; cursor:pointer; transition:background .15s ease,border-color .15s ease,opacity .15s ease; }
+.nexus-button:disabled { opacity:.55; cursor:not-allowed; }
+.nexus-button--primary { background:var(--nexus-accent); color:#071017; }
+.nexus-button--secondary { background:var(--nexus-surface); border-color:var(--nexus-border); color:var(--nexus-text); }
+.nexus-button--ghost { background:transparent; color:var(--nexus-muted); }
+.nexus-button--danger { background:transparent; border-color:var(--nexus-critical); color:var(--nexus-critical); }
+.nexus-status,.nexus-badge { display:inline-flex; align-items:center; gap:7px; width:fit-content; border-radius:999px; font-size:12px; line-height:1; white-space:nowrap; }
+.nexus-status__dot { width:7px; height:7px; border-radius:50%; background:currentColor; }
+.nexus-status--healthy,.nexus-badge--healthy { color:var(--nexus-success); }
+.nexus-status--warning,.nexus-badge--warning { color:var(--nexus-warning); }
+.nexus-status--critical,.nexus-badge--critical { color:var(--nexus-critical); }
+.nexus-status--info,.nexus-badge--info { color:var(--nexus-accent); }
+.nexus-status--ai,.nexus-badge--ai { color:var(--nexus-ai); }
+.nexus-badge { padding:5px 8px; background:color-mix(in srgb,currentColor 10%,transparent); }
+.nexus-divider { border:0; border-top:1px solid var(--nexus-border); margin:0; }
