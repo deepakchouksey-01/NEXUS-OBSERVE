@@ -1,34 +1,91 @@
 # NEXUS OBSERVE
 
-Enterprise-grade observability, incident intelligence, and reliability platform.
+### Enterprise Observability & Reliability Platform
 
-## Architecture
+NEXUS OBSERVE is a production-oriented observability platform designed to provide engineering teams with a centralized operational view of application services, infrastructure, telemetry, incidents, alerts, deployments, and reliability signals.
 
-- `apps/web` — Next.js 16 web console
-- `apps/api` — API boundary and application services
-- `apps/worker` — asynchronous processing and scheduled jobs
-- `packages/*` — shared UI, types, config, validation, logging, telemetry
-- `services/*` — ingestion, alerting, correlation, anomaly detection, RCA
-- `database/prisma` — PostgreSQL schema and migrations
-- `infrastructure` — Docker, Kubernetes, Nginx, monitoring, Terraform
-- `docs` — architecture, API, security, deployment and runbooks
+It combines metrics, logs, distributed traces, service dependencies, incident management, monitoring, SLO/SLA tracking, auditability, and AI-assisted investigation into a unified engineering console.
 
-## Development principles
+---
 
-1. Tenant isolation is mandatory.
-2. Every request carries a request/correlation ID.
-3. APIs are versioned under `/api/v1`.
-4. Telemetry ingestion is asynchronous and never blocks user-facing queries.
-5. Production UI favors information density and clarity over decoration.
-6. Features are not considered complete without validation, authorization, error states and tests.
+## Overview
 
-## Start
+Modern distributed applications generate large volumes of operational data across services, hosts, containers, deployments, and infrastructure.
 
-```bash
-npm install
-cp .env.example .env
-npm run db:generate
-npm run dev
-```
+NEXUS OBSERVE brings these signals together into a single platform so engineering and operations teams can:
 
-PostgreSQL and Redis can be started with Docker Compose once infrastructure services are added.
+- Monitor service health
+- Explore application metrics
+- Investigate operational logs
+- Trace distributed requests
+- Understand service dependencies
+- Detect and manage alerts
+- Correlate alerts into incidents
+- Track deployments
+- Monitor SLO/SLA objectives
+- Investigate operational problems
+- Manage teams, integrations, API keys, and audit activity
+
+The platform follows a modular architecture designed to support reliable ingestion, scalable querying, background processing, and secure multi-tenant access.
+
+---
+
+## Core Capabilities
+
+| Capability | Description |
+| --- | --- |
+| **Service Observability** | Centralized health and operational visibility across application services |
+| **Metrics** | Service and infrastructure performance measurements |
+| **Logs** | Searchable structured operational logs with filtering |
+| **Distributed Tracing** | Trace and span exploration across services |
+| **Service Map** | Dependency relationships between services |
+| **Alerts** | Configurable operational alert definitions and states |
+| **Incident Management** | Incident lifecycle and alert correlation |
+| **Monitors** | Scheduled monitoring and health checks |
+| **SLO / SLA** | Reliability objectives, error budgets and burn-rate visibility |
+| **Deployments** | Deployment history and service version tracking |
+| **Infrastructure** | Host and container visibility |
+| **AI Investigation** | Centralized interface for assisted operational investigation |
+| **Integrations** | External-system integration management |
+| **API Keys** | Scoped programmatic access management |
+| **Audit Logs** | Security and operational activity tracking |
+| **RBAC** | Organization-level role-based access control |
+
+---
+
+# Architecture
+
+NEXUS OBSERVE uses a modular application architecture rather than unnecessarily splitting the platform into many independent microservices.
+
+```mermaid
+flowchart TB
+
+    User["Engineering / Operations User"]
+
+    Web["NEXUS Web Console<br/>Next.js + React"]
+
+    API["NEXUS API<br/>Fastify<br/>Versioned REST API"]
+
+    Worker["Telemetry & Background Worker<br/>Async Processing"]
+
+    Redis["Redis<br/>Caching / Runtime Coordination"]
+
+    PostgreSQL["PostgreSQL<br/>Operational Data"]
+
+    Prisma["Prisma ORM<br/>Database Access"]
+
+    User --> Web
+    Web --> API
+
+    API --> Prisma
+    Prisma --> PostgreSQL
+
+    API --> Redis
+
+    Worker --> PostgreSQL
+    Worker --> Redis
+
+    Telemetry["Metrics / Logs / Traces"] --> Worker
+    Telemetry --> API
+
+    API --> Web
