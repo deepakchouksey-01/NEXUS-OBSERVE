@@ -234,9 +234,15 @@ export default function ServicesPage() {
     return () => window.clearTimeout(timer);
   }, [loadServices]);
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = window.setTimeout(() => {
     setPage(1);
-  }, [search, statusFilter, environment]);
+  }, 0);
+
+  return () => {
+    window.clearTimeout(timer);
+  };
+}, [search, statusFilter, environment]);
 
   const healthy = services.filter(
     (service) => service.status === "HEALTHY",

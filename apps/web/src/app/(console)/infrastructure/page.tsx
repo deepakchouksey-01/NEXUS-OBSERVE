@@ -353,7 +353,13 @@ export default function InfrastructurePage() {
   );
 
   useEffect(() => {
-    void fetchHosts();
+    const timer = window.setTimeout(() => {
+      void fetchHosts();
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
   }, [fetchHosts]);
 
   const healthy = hosts.filter(

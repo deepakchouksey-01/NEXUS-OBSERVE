@@ -324,9 +324,15 @@ export default function LogsPage() {
     [level, search, service],
   );
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = window.setTimeout(() => {
     void fetchServices();
-  }, [fetchServices]);
+  }, 0);
+
+  return () => {
+    window.clearTimeout(timer);
+  };
+}, [fetchServices]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

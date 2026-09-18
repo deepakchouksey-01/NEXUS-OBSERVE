@@ -171,9 +171,15 @@ export default function MetricsPage() {
     [],
   );
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = window.setTimeout(() => {
     void fetchMetrics();
-  }, [fetchMetrics]);
+  }, 0);
+
+  return () => {
+    window.clearTimeout(timer);
+  };
+}, [fetchMetrics]);
 
   const services = useMemo(() => {
     const serviceMap = new Map<

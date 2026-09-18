@@ -391,9 +391,15 @@ export default function ServiceMapPage() {
     [environment, search],
   );
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = window.setTimeout(() => {
     void loadDependencies();
-  }, [loadDependencies]);
+  }, 0);
+
+  return () => {
+    window.clearTimeout(timer);
+  };
+}, [loadDependencies]);
 
   const filteredServices = useMemo(() => {
     if (view === "All services") {

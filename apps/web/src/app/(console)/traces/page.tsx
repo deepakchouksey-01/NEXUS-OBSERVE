@@ -400,30 +400,44 @@ export default function TracesPage() {
     ],
   );
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = window.setTimeout(() => {
     void fetchServices();
-  }, [fetchServices]);
+  }, 0);
 
-  useEffect(() => {
+  return () => {
+    window.clearTimeout(timer);
+  };
+}, [fetchServices]);
+
+useEffect(() => {
+  const initialFetch = window.setTimeout(() => {
     void fetchTraces();
+  }, 0);
 
-    const interval =
-      window.setInterval(() => {
-        void fetchTraces(true);
-      }, 15_000);
+  const interval = window.setInterval(() => {
+    void fetchTraces();
+  }, 30000);
 
-    return () => {
-      window.clearInterval(interval);
-    };
-  }, [fetchTraces]);
+  return () => {
+    window.clearTimeout(initialFetch);
+    window.clearInterval(interval);
+  };
+}, [fetchTraces]);
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = window.setTimeout(() => {
     setPage(1);
-  }, [
-    search,
-    service,
-    status,
-  ]);
+  }, 0);
+
+  return () => {
+    window.clearTimeout(timer);
+  };
+}, [
+  search,
+  service,
+  status,
+]);
 
   const visibleTraces = useMemo(
     () => traces,
